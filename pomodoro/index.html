@@ -13,7 +13,7 @@ html{min-height:100%;background:var(--bg)}
 body{margin:0;min-height:100vh;min-height:100dvh;color:var(--ink);font-family:Trebuchet MS,Arial,sans-serif;background:radial-gradient(ellipse at 52% 35%,#a22abc 0,#8f20b4 42%,#7915a4 100%);overflow-x:hidden}
 button,input{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible,input:focus-visible{outline:3px solid #ffdc8c;outline-offset:4px}
 main{width:min(100%,980px);min-height:100vh;min-height:100dvh;margin:auto;padding:22px clamp(16px,4vw,38px) 26px;display:flex;flex-direction:column;align-items:center}
-.top{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.topbar{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .roundbtn{width:56px;height:56px;display:grid;place-items:center;border:0;border-radius:100%;background:#dfaaef;color:#6b168f;box-shadow:0 8px 24px #51127a40;transition:transform .15s,background .2s}
 .roundbtn:hover{transform:scale(1.06);background:#efc8fb}
 .roundbtn svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
@@ -91,7 +91,7 @@ body.resting .tomato-svg{filter:drop-shadow(0 12px 10px #28034840) hue-rotate(-1
 </head>
 <body>
 <main>
- <header class="top">
+ <header class="topbar">
   <button type="button" class="roundbtn" id="statsBtn" aria-label="Статистика" title="Статистика">
    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V11M12 19V5M19 19V9"/></svg>
   </button>
