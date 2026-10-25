@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8919b0">
+<meta name="description" content="Яркий детский таймер Помодоро: настраиваемые минуты работы и отдыха, помидор, спокойные перерывы и четыре миссии.">
+<title>Помодоро — Томатный таймер</title>
+<style>
+:root{--bg:#851bad;--bg-deep:#661295;--purple:#551081;--lav:#e4b4f6;--ink:#fff;--red:#f13b37;--green:#43b43a;--accent:#f7d19f;--shadow:0 18px 58px #32074a4a}
+*{box-sizing:border-box}
+html{min-height:100%;background:var(--bg)}
+body{margin:0;min-height:100vh;min-height:100dvh;color:var(--ink);font-family:Trebuchet MS,Arial,sans-serif;background:radial-gradient(ellipse at 52% 35%,#a22abc 0,#8f20b4 42%,#7915a4 100%);overflow-x:hidden}
+button,input{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible,input:focus-visible{outline:3px solid #ffdc8c;outline-offset:4px}
+main{width:min(100%,980px);min-height:100vh;min-height:100dvh;margin:auto;padding:22px clamp(16px,4vw,38px) 26px;display:flex;flex-direction:column;align-items:center}
+.top{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.roundbtn{width:56px;height:56px;display:grid;place-items:center;border:0;border-radius:100%;background:#dfaaef;color:#6b168f;box-shadow:0 8px 24px #51127a40;transition:transform .15s,background .2s}
+.roundbtn:hover{transform:scale(1.06);background:#efc8fb}
+.roundbtn svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.brand{text-align:center;font-size:13px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:#f6dafa;opacity:.93}
+.brand b{display:block;font-size:20px;letter-spacing:.05em;color:#fff;margin-top:3px}
+.heading{text-align:center;margin:9px 0 3px;font-size:clamp(19px,3vw,28px);font-weight:900;letter-spacing:.015em}
+.subheading{font-size:clamp(12px,2.6vw,15px);opacity:.85;text-align:center;min-height:19px}
+.timer-area{width:min(100%,min(61vh,535px));max-width:535px;min-width:min(300px,100%);margin:13px auto 0;position:relative}
+.dial{width:100%;aspect-ratio:1;position:relative;border-radius:50%;background:radial-gradient(circle at 51% 42%,#76219e 0,#6a159b 60%,#64118e 100%);box-shadow:inset 0 4px 30px #4f0a753d,0 20px 55px #41096142}
+.dial:after{content:"";position:absolute;inset:5%;border:1px solid #bd74db27;border-radius:50%;pointer-events:none}
+.ring{position:absolute;inset:0;width:100%;height:100%;overflow:visible;transform:rotate(-90deg);pointer-events:none}
+.ring circle{fill:none;stroke-width:3.5;opacity:.9}
+.ring .track{stroke:#ffffff1c}
+.ring .progress{stroke:#f9c5ef;stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset .2s linear}
+.dial-numbers{position:absolute;inset:0;pointer-events:none}
+.dial-number{position:absolute;transform:translate(-50%,-50%);font-family:Consolas,Monaco,monospace;font-weight:800;font-size:clamp(13px,2.9vw,23px);text-shadow:0 1px 8px #3a084b4d}
+.dial-number.top{background:white;color:#9220ba;border-radius:50%;min-width:37px;min-height:37px;display:grid;place-items:center;font-size:16px;line-height:1;letter-spacing:-2px;padding-right:2px}
+.tomato-button{position:absolute;inset:18% 16% 14%;border:0;padding:0;border-radius:49%;background:transparent;color:white;display:flex;align-items:center;justify-content:center;transition:transform .15s;isolation:isolate}
+.tomato-button:hover{transform:scale(1.025)}
+.tomato-button:active{transform:scale(.985)}
+.tomato-svg{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 12px 10px #3b064247)}
+.face{z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;transform:translateY(11%);text-shadow:0 3px 7px #9a181c5c}
+.counter{font-size:clamp(34px,7.4vw,70px);line-height:1;font-family:Consolas,Monaco,monospace;letter-spacing:-.09em;padding-right:.12em;font-weight:900}
+.play-icon{font-size:clamp(34px,6vw,66px);line-height:1;filter:drop-shadow(0 3px 5px #86262f7a);color:#ffe7df}
+.tomato-button .pause-shape{font-size:clamp(30px,5vw,55px);letter-spacing:-.22em;padding-right:.22em}
+.progress-caption{margin:12px auto 0;text-align:center;font-weight:800;font-size:14px;color:#f2d4fa}
+.dot-row{display:flex;gap:11px;align-items:center;justify-content:center;margin-top:9px}
+.crystal{width:13px;height:13px;transform:rotate(45deg);border-radius:3px;background:#d7a9ec73;border:1px solid #f3cff1a1}
+.crystal.done{background:#ffd47c;box-shadow:0 0 16px #ffd67ab5}
+.panel{width:min(100%,600px);margin:16px auto 0;border-radius:22px;background:#5e127f64;border:1px solid #dcabf449;box-shadow:0 8px 20px #36084a20;padding:13px 17px}
+.panel-title{font-size:12px;letter-spacing:.12em;color:#efc2ff;font-weight:800;text-transform:uppercase;text-align:center;margin-bottom:10px}
+.settings-row{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.time-setting{background:#ffffff12;border:1px solid #ffffff21;border-radius:14px;padding:7px 11px;display:flex;align-items:center;gap:9px;justify-content:space-between;min-width:0}
+.time-setting span{display:block;color:#fff;font-size:14px;font-weight:800}
+.time-setting small{display:block;color:#eec6fa;font-size:11px;margin-top:2px}
+.time-setting input{width:67px;border:0;border-radius:10px;padding:7px 4px;text-align:center;font-weight:900;font-size:22px;background:#eac3f2;color:#66118b;appearance:textfield;-moz-appearance:textfield}
+.time-setting input::-webkit-inner-spin-button,.time-setting input::-webkit-outer-spin-button{-webkit-appearance:none}
+.time-setting input:disabled{opacity:.5;cursor:not-allowed}
+.preset-row{margin-top:10px;display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
+.preset{border:1px solid #e2b0f96b;background:#ffffff1d;color:white;border-radius:20px;font-size:12px;font-weight:800;padding:6px 12px;transition:background .15s}
+.preset:hover,.preset.active{background:#e9b6ff;color:#601181}
+.preset:disabled{opacity:.45;cursor:not-allowed}
+.actions{display:flex;gap:10px;justify-content:center;margin:15px 0 0;flex-wrap:wrap}
+.action{border:0;background:#f5d7ff;color:#69158e;padding:11px 17px;border-radius:14px;font-size:14px;font-weight:900;box-shadow:0 7px 13px #42076136;min-height:42px}
+.action.secondary{background:#6411879c;color:white;border:1px solid #eac3f178}
+.action:hover{filter:brightness(1.07)}
+.tip{font-size:13px;min-height:30px;max-width:640px;text-align:center;color:#f9e2fc;line-height:1.5;margin-top:15px}
+.bottom{display:flex;justify-content:center;align-items:center;gap:clamp(35px,8vw,95px);margin-top:auto;padding-top:18px}
+.nav{display:flex;align-items:center;flex-direction:column;gap:5px;background:none;color:#e7c0f4;border:0;font-weight:900;font-size:11px;min-width:80px}
+.nav-circle{display:grid;place-items:center;width:54px;height:54px;background:#661298;border-radius:50%;color:#dcb0ef;transition:.2s}
+.nav:hover .nav-circle,.nav.selected .nav-circle{background:#edc6fb;color:#721499;transform:translateY(-2px)}
+.nav svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);background:#fff;color:#61128a;padding:12px 20px;border-radius:15px;box-shadow:var(--shadow);font-weight:900;opacity:0;transition:.2s;pointer-events:none;z-index:100;text-align:center;max-width:92vw}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.overlay{position:fixed;inset:0;background:#2b073bc9;z-index:50;display:grid;place-items:center;padding:20px;backdrop-filter:blur(7px)}
+.overlay[hidden]{display:none}
+.modal{max-width:440px;width:100%;border-radius:28px;background:#fbf4ff;color:#531077;box-shadow:0 22px 80px #270033a3;padding:27px;position:relative;max-height:90vh;overflow:auto}
+.modal h2{margin:3px 0 14px;font-size:25px;line-height:1.1}
+.modal p{line-height:1.55;font-size:15px}
+.modal ul{padding-left:20px;line-height:1.65}
+.modal .action{background:#8222aa;color:white}
+.close{position:absolute;right:16px;top:13px;border:0;background:#f0def8;color:#68158c;border-radius:50%;width:34px;height:34px;font-size:21px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat-card{background:#efddf7;border-radius:17px;padding:17px;text-align:center}
+.stat-card strong{font-size:34px;display:block}
+.stat-card span{font-size:12px}
+.kbd{border:1px solid #d6b6e3;border-radius:5px;padding:1px 6px;font-weight:800}
+body.resting{background:radial-gradient(ellipse at 52% 35%,#9947be 0,#742aa2 55%,#59188a 100%)}
+body.resting .dial{background:radial-gradient(circle,#62268e,#4d177b)}
+body.resting .tomato-svg{filter:drop-shadow(0 12px 10px #28034840) hue-rotate(-12deg)}
+@media(max-height:800px) and (min-width:650px){main{padding-top:13px;padding-bottom:14px}.timer-area{width:min(49vh,510px)}.panel{margin-top:8px}.tip{margin-top:6px}.bottom{padding-top:9px}.heading{margin-top:0}}
+@media(max-width:520px){main{padding:16px 12px 19px}.roundbtn{width:47px;height:47px}.brand{font-size:10px;letter-spacing:.12em}.brand b{font-size:16px}.timer-area{margin-top:8px;width:min(100%,470px)}.panel{margin-top:10px;padding:11px}.settings-row{gap:7px}.time-setting{padding:7px 8px}.time-setting input{width:58px;font-size:19px}.time-setting span{font-size:12px}.time-setting small{font-size:10px}.panel-title{margin-bottom:7px}.tip{font-size:12px;margin-top:10px}.bottom{gap:17px;padding-top:12px}.nav-circle{width:48px;height:48px}.nav{min-width:75px}.actions{margin-top:9px}.action{font-size:12px;padding:9px 12px}.dial-number.top{min-width:29px;min-height:29px;font-size:13px}.dial-number{font-size:clamp(12px,3vw,19px)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<main>
+ <header class="top">
+  <button type="button" class="roundbtn" id="statsBtn" aria-label="Статистика" title="Статистика">
+   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V11M12 19V5M19 19V9"/></svg>
+  </button>
+  <div class="brand">Лаборатория суперсил<b>ТОМАТНЫЙ ТАЙМЕР</b></div>
+  <button type="button" class="roundbtn" id="infoBtn" aria-label="Как пользоваться" title="Как пользоваться">
+   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 10v7M12 7h.01"/><circle cx="12" cy="12" r="10"/></svg>
+  </button>
+ </header>
+ <h1 class="heading" id="phaseHeading">Время сосредоточиться!</h1>
+ <div class="subheading" id="phaseSub">Выбери одно небольшое дело и нажми на помидор</div>
+ <section class="timer-area" aria-label="Таймер Помодоро">
+  <div class="dial">
+   <svg class="ring" viewBox="0 0 500 500" aria-hidden="true">
+    <circle class="track" cx="250" cy="250" r="242"></circle>
+    <circle class="progress" id="progressRing" cx="250" cy="250" r="242" stroke-dasharray="1520.53" stroke-dashoffset="0"></circle>
+   </svg>
+   <div class="dial-numbers" id="dialNumbers" aria-hidden="true"></div>
+   <button class="tomato-button" id="tomatoBtn" type="button" aria-label="Запустить таймер" title="Запуск / пауза">
+    <svg class="tomato-svg" viewBox="0 0 400 400" aria-hidden="true">
+     <defs>
+       <radialGradient id="tomatoFill" cx="38%" cy="28%" r="84%"><stop offset="0" stop-color="#ff5645"/><stop offset=".7" stop-color="#f03836"/><stop offset="1" stop-color="#da2b37"/></radialGradient>
+     </defs>
+     <path d="M200 93 C154 68 90 92 61 139 C36 182 36 255 65 302 C94 352 155 365 201 362 C256 368 313 349 340 302 C373 244 355 165 325 129 C298 95 250 74 200 93Z" fill="url(#tomatoFill)"/>
+     <path d="M199 96 V49" stroke="#49bd43" stroke-width="19" stroke-linecap="round"/>
+     <path d="M198 107 C164 96 146 91 124 91 C142 103 150 112 159 121 C127 111 111 116 97 126 C130 139 160 135 181 129 C180 149 184 157 198 164 C210 147 217 134 217 122 C239 138 275 134 308 118 C290 108 270 107 246 113 C263 104 273 95 277 89 C248 88 219 94 198 107Z" fill="#43b839"/>
+     <ellipse cx="128" cy="187" rx="34" ry="14" fill="#ff9487" opacity=".14" transform="rotate(-24 128 187)"/>
+    </svg>
+    <span class="face"><span class="counter" id="timeDisplay" aria-live="off">10:00</span><span class="play-icon" id="playIcon" aria-hidden="true">▶</span></span>
+   </button>
+  </div>
+  <p class="progress-caption" id="progressCaption">Миссии завершены: 0</p>
+  <div class="dot-row" id="crystals" aria-label="Выполненные рабочие интервалы"><span class="crystal"></span><span class="crystal"></span><span class="crystal"></span><span class="crystal"></span></div>
+ </section>
+ <section class="panel" aria-label="Настройка времени">
+  <div class="panel-title">СВОЙ РИТМ РАБОТЫ И ОТДЫХА</div>
+  <div class="settings-row">
+   <label class="time-setting"><span>🍅 Работа<small>от 1 до 120 мин</small></span><input id="workInput" aria-label="Минуты работы" type="number" inputmode="numeric" min="1" max="120" value="10"></label>
+   <label class="time-setting"><span>☕ Отдых<small>от 1 до 60 мин</small></span><input id="breakInput" aria-label="Минуты отдыха" type="number" inputmode="numeric" min="1" max="60" value="2"></label>
+  </div>
+  <div class="preset-row" aria-label="Быстрые настройки">
+   <button type="button" class="preset" data-work="10" data-break="2">10 / 2</button>
+   <button type="button" class="preset" data-work="15" data-break="5">15 / 5</button>
+   <button type="button" class="preset" data-work="25" data-break="5">25 / 5</button>
+   <button type="button" class="preset" data-work="30" data-break="10">30 / 10</button>
+  </div>
+ </section>
+ <div class="actions">
+  <button type="button" id="resetBtn" class="action secondary">↻ Сбросить</button>
+  <button type="button" id="nextBtn" class="action secondary">⏭ Следующий этап</button>
+  <button type="button" id="soundBtn" class="action" aria-pressed="true">♪ Звук: вкл.</button>
+ </div>
+ <p class="tip" id="tip">Для урока 19: 10 минут дела на Holst, затем 2 минуты отдыха и выбора стикеров.</p>
+ <nav class="bottom" aria-label="Режимы таймера">
+  <button class="nav" id="breakBtn" type="button"><span class="nav-circle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18h16M5 7h11v7a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V7ZM16 9h3a3 3 0 0 1 0 6h-3M7 2c-1 1-1 2 0 3M12 2c-1 1-1 2 0 3"/></svg></span>Отдых</button>
+  <button class="nav selected" id="workBtn" type="button"><span class="nav-circle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h7a3 3 0 0 1 3 3v12a3 3 0 0 0-3-3H3V5ZM21 5h-5a3 3 0 0 0-3 3v12a3 3 0 0 1 3-3h5V5Z"/></svg></span>Работа</button>
+  <button class="nav" id="settingsBtn" type="button"><span class="nav-circle"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="m10 2-.5 2-2 1-2-.5-2 3 1.5 1.5v2L3 13l2 3 2.5-.5 2 1 .5 2h4l.5-2 2-1L19 16l2-3-2-2V9l2-1.5-2-3-2.5.5-2-1L14 2Z"/></svg></span>Настройки</button>
+ </nav>
+</main>
+<div class="overlay" id="overlay" hidden>
+ <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <button type="button" class="close" id="closeModal" aria-label="Закрыть">×</button>
+  <div id="modalBody"></div>
+ </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+"use strict";
+var KEY="pomodoro-tomato-2026-v1", MS=60000, CIRC=2*Math.PI*242;
+function byId(x){return document.getElementById(x)}
+function clipInt(x,low,high){var n=Number(x);return Number.isFinite(n)?Math.max(low,Math.min(high,Math.round(n))):low}
+function getDefaults(){return {work:10,rest:2,phase:"work",remaining:10*MS,running:false,endAt:0,rounds:0,total:0,sound:true}}
+var state=getDefaults();
+try{var restored=JSON.parse(localStorage.getItem(KEY)||"null");if(restored&&typeof restored==="object"){var d=getDefaults();state=Object.assign(d,restored);state.work=clipInt(state.work,1,120);state.rest=clipInt(state.rest,1,60);state.phase=state.phase==="rest"?"rest":"work";state.rounds=clipInt(state.rounds,0,100000);state.total=clipInt(state.total,0,10000000);state.remaining=Math.max(0,Math.min(120*MS,Number(state.remaining)||0));state.running=Boolean(state.running);state.endAt=Number(state.endAt)||0;}}
+catch(e){state=getDefaults()}
+var audioCtx=null,toastHandle=0,modalOpen=false,lastFocus=null;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+function ding(){if(!state.sound)return;try{var A=window.AudioContext||window.webkitAudioContext;if(!A)return;audioCtx=audioCtx||new A();if(audioCtx.state==="suspended")audioCtx.resume();[880,1174.66].forEach(function(freq,i){var osc=audioCtx.createOscillator(),vol=audioCtx.createGain(),t=audioCtx.currentTime+i*.18;osc.type="sine";osc.frequency.value=freq;vol.gain.setValueAtTime(.0001,t);vol.gain.exponentialRampToValueAtTime(.15,t+.015);vol.gain.exponentialRampToValueAtTime(.0001,t+.28);osc.connect(vol);vol.connect(audioCtx.destination);osc.start(t);osc.stop(t+.29);})}catch(e){}}
+function toast(msg){var t=byId("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastHandle);toastHandle=setTimeout(function(){t.classList.remove("show")},2800)}
+function duration(){return (state.phase==="work"?state.work:state.rest)*MS}
+function minuteLabel(ms){var seconds=Math.max(0,Math.ceil(ms/1000));var m=Math.floor(seconds/60),s=seconds%60;return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0")}
+function computeRemaining(){return state.running?Math.max(0,state.endAt-Date.now()):state.remaining}
+function syncEnd(){
+ if(!state.running)return;
+ var now=Date.now();
+ if(now<state.endAt)return;
+ if(state.phase==="work"){
+  var restEnd=state.endAt+state.rest*MS;
+  state.rounds+=1;state.total+=state.work;
+  state.phase="rest";
+  if(now>=restEnd){state.phase="work";state.remaining=state.work*MS;state.running=false;state.endAt=0;toast("Работа и отдых завершены! 🍅")}
+  else {state.endAt=restEnd;state.remaining=Math.max(0,restEnd-now);toast("Отлично! Время отдыха и стикеров ☕")}
+ }else{
+  state.phase="work";state.remaining=state.work*MS;state.running=false;state.endAt=0;toast("Перерыв завершён. Готовы к новой миссии?")
+ }
+ ding();save();
+}
+function render(){
+ syncEnd();
+ var ms=computeRemaining(),p=Math.max(0,Math.min(1,ms/duration()));
+ byId("timeDisplay").textContent=minuteLabel(ms);
+ byId("progressRing").setAttribute("stroke-dasharray",String(CIRC.toFixed(2)));
+ byId("progressRing").setAttribute("stroke-dashoffset",String((CIRC*(1-p)).toFixed(2)));
+ byId("phaseHeading").textContent=state.phase==="work"?"Время сосредоточиться!":"Время отдохнуть!";
+ byId("phaseSub").textContent=state.phase==="work"?"Один небольшой шаг — одна суперсила":"Потянись, посмотри вдаль или выбери стикеры";
+ byId("tip").textContent=state.phase==="work"?"Работай над своей страницей на Holst. Через "+state.work+" мин — перерыв на "+state.rest+" мин.":"Перерыв — часть Помодоро. Стикеры для дневника можно выбрать по желанию.";
+ byId("playIcon").textContent=state.running?"Ⅱ":"▶";
+ byId("playIcon").classList.toggle("pause-shape",state.running);
+ byId("tomatoBtn").setAttribute("aria-label",state.running?"Поставить на паузу":"Запустить таймер");
+ byId("progressCaption").textContent="Завершено рабочих интервалов: "+state.rounds;
+ Array.prototype.forEach.call(byId("crystals").children,function(el,i){el.classList.toggle("done",i<Math.min(4,state.rounds%5))});
+ byId("workInput").value=state.work;byId("breakInput").value=state.rest;
+ byId("workInput").disabled=state.running;byId("breakInput").disabled=state.running;
+ document.querySelectorAll(".preset").forEach(function(el){el.disabled=state.running;el.classList.toggle("active",Number(el.dataset.work)===state.work&&Number(el.dataset.break)===state.rest)});
+ byId("workBtn").classList.toggle("selected",state.phase==="work");byId("breakBtn").classList.toggle("selected",state.phase==="rest");
+ document.body.classList.toggle("resting",state.phase==="rest");
+ byId("soundBtn").textContent=state.sound?"♪ Звук: вкл.":"♪ Звук: выкл.";
+ byId("soundBtn").setAttribute("aria-pressed",String(state.sound));
+ document.title=minuteLabel(ms)+" · "+(state.phase==="work"?"Работа":"Отдых")+" | Помодоро";
+}
+function startPause(){syncEnd();if(state.running){state.remaining=computeRemaining();state.running=false;state.endAt=0;toast("Таймер на паузе")}else{if(state.remaining<=0)state.remaining=duration();state.endAt=Date.now()+state.remaining;state.running=true;toast(state.phase==="work"?"Миссия началась! 🍅":"Время отдохнуть ☕");try{var A=window.AudioContext||window.webkitAudioContext;if(A){audioCtx=audioCtx||new A();if(audioCtx.state==="suspended")audioCtx.resume()}}catch(e){}}save();render()}
+function reset(){state.phase="work";state.remaining=state.work*MS;state.running=false;state.endAt=0;save();render();toast("Таймер сброшен")}
+function setPhase(phase){state.phase=phase;state.remaining=duration();state.running=false;state.endAt=0;save();render();toast(phase==="work"?"Режим работы 🍅":"Режим отдыха ☕")}
+function next(){setPhase(state.phase==="work"?"rest":"work")}
+function apply(work,rest){if(state.running){toast("Сначала поставь таймер на паузу");return}state.work=clipInt(work,1,120);state.rest=clipInt(rest,1,60);state.remaining=duration();state.endAt=0;save();render();toast("Время сохранено: "+state.work+" / "+state.rest+" мин")}
+function openModal(type){
+ modalOpen=true;lastFocus=document.activeElement;
+ var html="";
+ if(type==="info"){
+  html='<h2 id="modalTitle">Как работает Помодоро?</h2><p>🍅 <b>Сначала работаем, потом отдыхаем.</b> Укажи минуты работы и отдыха, нажми на помидор и вернись к заданию.</p><ul><li>Большой помидор — запуск и пауза.</li><li>Поля под часами — настройка минут.</li><li>Во время отдыха можно выбрать стикеры на Holst.</li><li>Кнопка «Следующий этап» переключает режим без начисления выполненной работы.</li><li>Клавиша <span class="kbd">Пробел</span> — запуск / пауза.</li></ul><p>Данные не передаются на сервер. Настройки и счётчик сохраняются только в этом браузере.</p>';
+ }else if(type==="stats"){
+  html='<h2 id="modalTitle">Твои суперспринты</h2><div class="stat-grid"><div class="stat-card"><strong>'+state.rounds+'</strong><span>завершённых рабочих интервалов</span></div><div class="stat-card"><strong>'+state.total+'</strong><span>минут работы</span></div></div><p>У каждого свой темп. Можно менять минуты и повторять миссии столько раз, сколько удобно.</p><button type="button" class="action" id="clearStatsBtn">Обнулить статистику</button>';
+ }else {
+  html='<h2 id="modalTitle">Настройки таймера</h2><p>Для урока 19 рекомендуем <b>10 минут работы + 2 минуты отдыха</b>, но можно установить другие значения в полях под циферблатом.</p><p>🔊 Звуковой сигнал работает, если браузер разрешает воспроизведение звука. После обновления страницы отсчёт продолжится по времени на устройстве.</p><p>⌨️ Пробел — запуск или пауза, <span class="kbd">Esc</span> — закрыть окно.</p>';
+ }
+ byId("modalBody").innerHTML=html;byId("overlay").hidden=false;byId("closeModal").focus();
+ if(type==="stats"){byId("clearStatsBtn").onclick=function(){state.rounds=0;state.total=0;save();closeModal();render();toast("Статистика очищена")};}
+}
+function closeModal(){if(!modalOpen)return;modalOpen=false;byId("overlay").hidden=true;if(lastFocus&&lastFocus.focus)lastFocus.focus()}
+byId("tomatoBtn").addEventListener("click",startPause);
+byId("resetBtn").addEventListener("click",reset);
+byId("nextBtn").addEventListener("click",next);
+byId("workBtn").addEventListener("click",function(){setPhase("work")});
+byId("breakBtn").addEventListener("click",function(){setPhase("rest")});
+byId("statsBtn").addEventListener("click",function(){openModal("stats")});
+byId("infoBtn").addEventListener("click",function(){openModal("info")});
+byId("settingsBtn").addEventListener("click",function(){openModal("settings")});
+byId("soundBtn").addEventListener("click",function(){state.sound=!state.sound;save();render()});
+byId("closeModal").addEventListener("click",closeModal);
+byId("overlay").addEventListener("click",function(e){if(e.target===byId("overlay"))closeModal()});
+byId("workInput").addEventListener("change",function(){apply(byId("workInput").value,state.rest)});
+byId("breakInput").addEventListener("change",function(){apply(state.work,byId("breakInput").value)});
+document.querySelectorAll(".preset").forEach(function(b){b.addEventListener("click",function(){apply(Number(b.dataset.work),Number(b.dataset.break))})});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeModal();return}if(e.code==="Space"&&!modalOpen&&!/INPUT|TEXTAREA|BUTTON/.test(document.activeElement.tagName)){e.preventDefault();startPause()}});
+document.addEventListener("visibilitychange",render);
+var dial=byId("dialNumbers");for(var i=0;i<12;i++){var n=i===0?60:i*5;var a=(i*30-90)*Math.PI/180;var sp=document.createElement("span");sp.className="dial-number"+(i===0?" top":"");sp.textContent=String(n);sp.style.left=(50+Math.cos(a)*43)+"%";sp.style.top=(50+Math.sin(a)*43)+"%";dial.appendChild(sp)}
+save();render();setInterval(render,250);
+})();
+</script>
+</body>
+</html>
