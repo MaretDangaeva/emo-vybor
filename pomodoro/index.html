@@ -203,7 +203,7 @@ function render(){
  byId("tomatoBtn").setAttribute("aria-label",state.running?"Поставить на паузу":"Запустить таймер");
  byId("progressCaption").textContent="Завершено рабочих интервалов: "+state.rounds;
  Array.prototype.forEach.call(byId("crystals").children,function(el,i){el.classList.toggle("done",i<Math.min(4,state.rounds%5))});
- byId("workInput").value=state.work;byId("breakInput").value=state.rest;
+ if(document.activeElement!==byId("workInput"))byId("workInput").value=state.work;if(document.activeElement!==byId("breakInput"))byId("breakInput").value=state.rest;
  byId("workInput").disabled=state.running;byId("breakInput").disabled=state.running;
  document.querySelectorAll(".preset").forEach(function(el){el.disabled=state.running;el.classList.toggle("active",Number(el.dataset.work)===state.work&&Number(el.dataset.break)===state.rest)});
  byId("workBtn").classList.toggle("selected",state.phase==="work");byId("breakBtn").classList.toggle("selected",state.phase==="rest");
